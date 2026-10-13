@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ぬいぐるみ工房">
+<meta name="theme-color" content="#f7cfee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#24113d" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>きらきらぬいぐるみ工房</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@500;700&display=swap">
+<style>
+/* Layout: one phone-width column over a pastel rainbow mesh with stars and glints.
+   Header, hero, timer, week and collection are opaque cards so text stays readable on the busy ground.
+   Bold moment: the iridescent hero border and the plush being sewn. */
+:root {
+  --bg: #f7cfee;
+  --m1: #ff9fd0;
+  --m2: #c9a6ff;
+  --m3: #9ee6e8;
+  --m4: #dff0a4;
+  --veil: rgba(255, 255, 255, 0);
+  --stars: none;
+  --glints: none;
+  --surface: #ffffff;
+  --surface2: #fff8fc;
+  --bg2: #f0e8ff;
+  --fg: #4b2a52;
+  --muted: #7b5a85;
+  --line: #f2d3e5;
+  --pink: #ff6fae;
+  --lav: #a98bff;
+  --aqua: #5fd0e6;
+  --gold: #ffc861;
+  --on-accent: #3a1743;
+  --shadow: 0 10px 28px rgba(190, 100, 160, .22);
+  --font-display: 'Mochiy Pop One', 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-body: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #24113d;
+    --m1: #7d2a78;
+    --m2: #4a2a9a;
+    --m3: #1d5a78;
+    --m4: #2e5a52;
+    --veil: rgba(24, 8, 44, .5);
+    --surface: #2b1a45;
+    --surface2: #34214f;
+    --bg2: #3a2461;
+    --fg: #fbeaff;
+    --muted: #c9afdc;
+    --line: #4d356b;
+    --pink: #ff8fc4;
+    --lav: #b9a2ff;
+    --aqua: #7fe0f0;
+    --gold: #ffd27a;
+    --on-accent: #3a1743;
+    --shadow: 0 10px 28px rgba(0, 0, 0, .4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #24113d;
+  --m1: #7d2a78;
+  --m2: #4a2a9a;
+  --m3: #1d5a78;
+  --m4: #2e5a52;
+  --veil: rgba(24, 8, 44, .5);
+  --surface: #2b1a45;
+  --surface2: #34214f;
+  --bg2: #3a2461;
+  --fg: #fbeaff;
+  --muted: #c9afdc;
+  --line: #4d356b;
+  --pink: #ff8fc4;
+  --lav: #b9a2ff;
+  --aqua: #7fe0f0;
+  --gold: #ffd27a;
+  --on-accent: #3a1743;
+  --shadow: 0 10px 28px rgba(0, 0, 0, .4);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--veil), var(--veil)),
+    var(--glints),
+    var(--stars),
+    radial-gradient(60% 9% at 8% 4%, var(--m1), transparent 70%),
+    radial-gradient(50% 10% at 96% 16%, var(--m2), transparent 70%),
+    radial-gradient(60% 9% at 14% 34%, var(--m3), transparent 70%),
+    radial-gradient(55% 10% at 92% 52%, var(--m1), transparent 70%),
+    radial-gradient(60% 9% at 10% 72%, var(--m4), transparent 70%),
+    radial-gradient(60% 10% at 88% 92%, var(--m2), transparent 70%);
+  background-size: 100% 100%, 760px 760px, 520px 520px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  color: var(--fg);
+  font: 500 16px/1.65 var(--font-body);
+  padding-inline: 1rem;
+  padding-block: 0;
+}
+button { font-family: inherit; }
+:focus-visible { outline: 3px solid var(--aqua); outline-offset: 3px; }
+
+.app {
+  max-width: 30rem;
+  margin-inline: auto;
+  display: grid;
+  gap: 1.1rem;
+  padding-block: 1.25rem 2.5rem;
+}
+.app > * { min-width: 0; }
+
+/* header */
+.top {
+  display: flex; justify-content: space-between; align-items: center; gap: .6rem 1rem; flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 1.6rem;
+  padding: .7rem 1rem; box-shadow: var(--shadow);
+}
+.brand { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+.logo { width: 2rem; height: 2rem; flex: none; color: var(--pink); }
+.brand h1 { font: 400 1.25rem/1.2 var(--font-display); margin: 0; }
+.brand p { margin: 0; font-size: .75rem; color: var(--muted); }
+.streak {
+  display: flex; align-items: center; gap: .35rem;
+  padding: .35rem .85rem; border-radius: 999px;
+  background: var(--bg2); font-size: .82rem; font-weight: 700;
+}
+.streak svg { width: 1rem; height: 1rem; color: var(--gold); flex: none; }
+
+/* demo banner */
+.banner {
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; flex-wrap: wrap;
+  background: var(--surface); border: 2px dashed var(--lav); border-radius: 1rem;
+  padding: .7rem .95rem; font-size: .85rem;
+}
+
+/* hero */
+.hero {
+  position: relative;
+  border: 3px solid transparent;
+  border-radius: 2rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg, var(--pink), var(--lav), var(--aqua), var(--gold)) border-box;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.stage-art { position: relative; width: min(16rem, 72%); margin-inline: auto; aspect-ratio: 1; }
+.plush { width: 100%; height: 100%; display: block; }
+.tw { position: absolute; opacity: .85; animation: tw 2.6s ease-in-out infinite; }
+.tw.c0 { color: var(--gold); }
+.tw.c1 { color: var(--pink); }
+.tw.c2 { color: var(--aqua); }
+.tw.c3 { color: var(--lav); }
+@keyframes tw {
+  0%, 100% { opacity: .25; transform: scale(.6) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(20deg); }
+}
+.eyebrow { margin: .3rem 0 0; color: var(--muted); font-size: .8rem; letter-spacing: .12em; }
+.stone { font: 400 1.6rem/1.3 var(--font-display); margin: .1rem 0 .5rem; text-wrap: balance; }
+.pill {
+  display: inline-block; padding: .15rem .85rem; border-radius: 999px;
+  background: var(--bg2); font-size: .8rem; font-weight: 700;
+}
+.meter {
+  margin: 1rem auto .45rem; max-width: 20rem; height: .9rem; border-radius: 999px;
+  background: var(--line); position: relative; overflow: hidden;
+}
+.meter i {
+  position: absolute; inset: 0 auto 0 0; border-radius: inherit;
+  background: linear-gradient(90deg, var(--pink), var(--lav), var(--aqua));
+  transition: width .6s ease;
+}
+.remain { margin: 0; font-size: .92rem; }
+.remain strong { font-family: var(--font-display); font-weight: 400; font-size: 1.1rem; color: var(--pink); }
+
+/* cards */
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 1.6rem; padding: 1.15rem; box-shadow: var(--shadow);
+}
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: .3rem .8rem; flex-wrap: wrap; }
+.card h2 { font: 400 1.1rem/1.3 var(--font-display); margin: 0; }
+.today { color: var(--muted); font-size: .85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sub { margin: .25rem 0 0; color: var(--muted); font-size: .88rem; }
+.hint { margin: .7rem 0 0; color: var(--muted); font-size: .82rem; text-align: center; }
+
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.chip {
+  flex: 1 1 3.4rem; min-width: 0; padding: .6rem .5rem; border-radius: 999px;
+  border: 2px solid var(--line); background: var(--surface2); color: var(--fg);
+  font-size: .95rem; font-weight: 700; cursor: pointer;
+}
+.chip[aria-pressed="true"] {
+  background: linear-gradient(135deg, var(--pink), var(--lav));
+  border-color: transparent; color: var(--on-accent);
+}
+.go {
+  display: block; width: 100%; margin-top: 1rem; padding: 1rem 1.2rem; border: 0; border-radius: 999px;
+  font: 400 1.15rem/1.3 var(--font-display); color: var(--on-accent);
+  background: linear-gradient(120deg, var(--pink), var(--lav));
+  box-shadow: 0 8px 20px rgba(255, 111, 174, .35); cursor: pointer;
+}
+.go:active { transform: scale(.98); }
+.go:disabled, .chip:disabled, .ghost:disabled { opacity: .5; cursor: default; }
+.ghost {
+  display: block; width: 100%; margin-top: .9rem; padding: .75rem 1rem; border-radius: 999px;
+  border: 2px solid var(--line); background: transparent; color: var(--fg);
+  font-size: .95rem; font-weight: 700; cursor: pointer;
+}
+.manual { margin-top: 1rem; border-top: 1px dashed var(--line); padding-top: .8rem; }
+.manual summary { cursor: pointer; color: var(--muted); font-size: .85rem; font-weight: 700; }
+.linkbtn {
+  background: none; border: 0; padding: .4rem; color: var(--fg);
+  text-decoration: underline; text-underline-offset: .2em; font-size: inherit; font-weight: 700; cursor: pointer;
+}
+
+/* timer ring */
+.ring { position: relative; width: min(13rem, 72%); margin: .9rem auto .2rem; aspect-ratio: 1; }
+.ring svg { width: 100%; height: 100%; display: block; }
+.ring-track { stroke: var(--line); }
+.ring-time {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 400 2.5rem/1 var(--font-display); font-variant-numeric: tabular-nums;
+}
+
+/* week */
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .35rem; margin-top: .9rem; }
+.day { display: grid; justify-items: center; gap: .3rem; font-size: .75rem; color: var(--muted); }
+.day.is-today { color: var(--fg); font-weight: 700; }
+.dot {
+  width: 2.4rem; max-width: 100%; aspect-ratio: 1; border-radius: 50%;
+  display: grid; place-items: center; border: 2px dashed var(--line); color: #fff;
+}
+.dot svg { width: 55%; height: 55%; }
+.dot.on { border: 0; background: linear-gradient(135deg, var(--pink), var(--lav)); }
+.dot.today { outline: 2px solid var(--aqua); outline-offset: 2px; }
+.day small { font-size: .7rem; font-variant-numeric: tabular-nums; min-height: 1.1em; }
+
+/* collection shelf */
+.gems { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin-top: .9rem; }
+.slot { margin: 0; text-align: center; min-width: 0; }
+.slot-art {
+  aspect-ratio: 1; display: grid; place-items: center; padding: .2rem;
+  border-radius: 1.2rem; background: var(--surface2); border: 1px solid var(--line);
+}
+.slot.empty .slot-art { background: transparent; border: 2px dashed var(--line); }
+.slot.empty .slot-art svg { filter: grayscale(1); opacity: .22; }
+.slot-art svg { width: 100%; height: auto; display: block; }
+.cap { font-size: .72rem; line-height: 1.3; margin-top: .3rem; font-weight: 700; }
+.cap small { display: block; color: var(--muted); font-weight: 500; font-size: .68rem; font-variant-numeric: tabular-nums; }
+
+.foot {
+  text-align: center; color: var(--muted); font-size: .75rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 1.2rem; padding: .8rem 1rem;
+}
+.foot p { margin: 0 0 .2rem; }
+
+/* celebration overlay */
+.overlay {
+  position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 1rem;
+  background: rgba(40, 16, 60, .55); overflow: hidden;
+}
+.pop {
+  position: relative; width: min(22rem, 100%); text-align: center;
+  border: 3px solid transparent; border-radius: 2rem; padding: 1.7rem 1.3rem 1.4rem;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(135deg, var(--pink), var(--lav), var(--aqua), var(--gold)) border-box;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+  animation: pop .45s cubic-bezier(.2, 1.4, .4, 1) both;
+}
+.pop h2 { font: 400 1.3rem/1.4 var(--font-display); margin: .2rem 0 .6rem; text-wrap: balance; }
+.pop p { margin: .5rem 0 0; }
+.gem-big { width: 10rem; max-width: 72%; margin: .4rem auto; }
+.gem-big svg { width: 100%; height: auto; display: block; }
+@keyframes pop { from { opacity: 0; transform: scale(.85) translateY(10px); } to { opacity: 1; transform: none; } }
+.burst { position: absolute; inset: 0; pointer-events: none; }
+.burst span {
+  position: absolute; left: 50%; top: 38%; width: .9rem; height: .9rem; background: var(--c);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: fly 1.2s ease-out both; animation-delay: var(--dl);
+}
+@keyframes fly {
+  from { transform: translate(0, 0) scale(.2); opacity: 1; }
+  to { transform: translate(var(--dx), var(--dy)) scale(1.3) rotate(140deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .burst { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div id="banner"></div>
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6L12 22.5l-2.6-7.9L1.5 12l7.9-2.6z"/></svg>
+      <div>
+        <h1>きらきらぬいぐるみ工房</h1>
+        <p>5分でも、ちゃんと進むよ</p>
+      </div>
+    </div>
+    <div class="streak" id="streak"></div>
+  </header>
+  <section class="hero" id="hero"></section>
+  <section class="card" id="timer"></section>
+  <section class="card" id="week"></section>
+  <section class="card" id="box"></section>
+  <footer class="foot" id="foot"></footer>
+</div>
+<div class="overlay" id="overlay" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var PLUSH_MIN = 40; // minutes of study that finish one plush
+  var KEY = 'kirakira-hosekibako-v1';
+
+  var COLORS = [
+    { n: 'いちごミルク', a: '#ffd6e6', b: '#ffa6c9', c: '#e0679c', r: '#7aa7ff' },
+    { n: 'ラベンダー', a: '#e6dcff', b: '#bfa6ff', c: '#8566e0', r: '#ffd166' },
+    { n: 'ミント', a: '#d3f6ea', b: '#98e3c8', c: '#4fb08d', r: '#ff7aa8' },
+    { n: 'レモン', a: '#fff3b8', b: '#ffe27a', c: '#e0b52f', r: '#ff7aa8' },
+    { n: 'ピーチ', a: '#ffe3d3', b: '#ffb89a', c: '#e0805a', r: '#7cc7ff' },
+    { n: 'ソーダ', a: '#d4ecff', b: '#8fc8ff', c: '#4a93d9', r: '#ff8fc0' },
+    { n: 'ミルクティー', a: '#f1dfcb', b: '#d9b998', c: '#a8815a', r: '#ff7aa8' },
+    { n: 'しろふわ', a: '#ffffff', b: '#f7efee', c: '#cdb4b4', r: '#ffa0c5' }
+  ];
+  var KINDS = ['くま', 'うさぎ', 'ねこ', 'いぬ', 'ひよこ', 'ひつじ', 'ぺんぎん', 'ぞう'];
+  var STAGES = ['ふわふわの おわた', 'ぬのを えらんだよ', 'ぬいあわせ中', 'かおを ししゅう中', 'リボンを むすぶよ'];
+  var DONE_MSG = ['えらい！ ひと針ぶん すすんだよ', 'ナイス集中！ ちくちく縫えたよ', 'やったね、また ひとつ形になったよ'];
+  var DAYS = ['月', '火', '水', '木', '金', '土', '日'];
+  var SPARK = 'M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6L12 22.5l-2.6-7.9L1.5 12l7.9-2.6z';
+
+  function kindIdx(i) { return i % 8; }
+  function colIdx(i) { return (i * 3 + Math.floor(i / 8)) % 8; }
+  function nameOf(i) { return COLORS[colIdx(i)].n + 'の' + KINDS[kindIdx(i)]; }
+
+  var uidN = 0;
+  function uid() { return ++uidN; }
+
+  /* ---------- the plush ---------- */
+  function E(cx, cy, rx, ry, fill, more) {
+    return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + fill + '"' + (more || '') + '/>';
+  }
+  function plushSVG(k, ci, stage, glow) {
+    var id = uid(), P = COLORS[ci], c = P.c;
+    var G = 'url(#f' + id + ')', D = 'url(#d' + id + ')';
+    var ol = ' stroke="' + c + '" stroke-opacity=".55" stroke-width="1.4" stroke-linejoin="round"';
+    var DK = '#3b2433', PK = '#ff8fb0', IN = '#ff9fbd', OR = '#ffa94d';
+    var s = '<svg class="plush" viewBox="-8 -16 116 116" aria-hidden="true"><defs>' +
+      '<radialGradient id="f' + id + '" cx=".35" cy=".28" r=".95"><stop offset="0" stop-color="' + P.a + '"/><stop offset=".6" stop-color="' + P.b + '"/><stop offset="1" stop-color="' + c + '" stop-opacity=".75"/></radialGradient>' +
+      '<radialGradient id="d' + id + '" cx=".35" cy=".28" r=".95"><stop offset="0" stop-color="' + P.b + '"/><stop offset="1" stop-color="' + c + '"/></radialGradient>' +
+      '<radialGradient id="h' + id + '"><stop offset="0" stop-color="' + P.b + '" stop-opacity=".5"/><stop offset="1" stop-color="' + P.b + '" stop-opacity="0"/></radialGradient></defs>';
+    if (glow) s += '<circle cx="50" cy="46" r="58" fill="url(#h' + id + ')"/>';
+    s += E(50, 97, 34, 4, c, ' fill-opacity=".2"');
+
+    if (stage === 0) { // a puff of cotton, a needle and thread
+      var puffs = [[36, 72, 15], [54, 66, 18], [70, 76, 13], [28, 84, 11], [50, 84, 14]];
+      puffs.forEach(function (p) { s += E(p[0], p[1], p[2], p[2], '#fffafc', ' stroke="' + P.a + '" stroke-width="1.4"'); });
+      s += E(46, 60, 7, 5, '#fff', ' fill-opacity=".8"');
+      s += '<path d="M78 36L60 62" stroke="#b9b4c9" stroke-width="2.2" stroke-linecap="round"/>' +
+        '<circle cx="78.6" cy="35" r="2.3" fill="none" stroke="#b9b4c9" stroke-width="1.2"/>' +
+        '<path d="M78.6 32.7Q92 24 86 12Q82 6 74 10" fill="none" stroke="' + P.b + '" stroke-width="1.8" stroke-linecap="round"/>';
+      return s + '</svg>';
+    }
+
+    var back = '', mid = '', front = '', face = '', FG = G;
+    var head = E(50, 38, 27, 24, G, ol), body = E(50, 70, 22, 22, G, ol);
+    var arms = '<g transform="rotate(20 27 66)">' + E(27, 66, 7, 11, G, ol) + '</g><g transform="rotate(-20 73 66)">' + E(73, 66, 7, 11, G, ol) + '</g>';
+    var belly = E(50, 72, 13, 14, '#fff', ' fill-opacity=".45"');
+    var blush = E(32, 44, 4.5, 2.6, PK, ' fill-opacity=".5"') + E(68, 44, 4.5, 2.6, PK, ' fill-opacity=".5"');
+    function eyes(x1, x2, y) {
+      return E(x1, y, 2.7, 3, DK) + E(x2, y, 2.7, 3, DK) + E(x1 + .9, y - 1, .9, .9, '#fff') + E(x2 + .9, y - 1, .9, .9, '#fff');
+    }
+    function line(d) { return '<path d="' + d + '" fill="none" stroke="' + DK + '" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>'; }
+
+    if (k === 0) { // くま
+      back = E(27, 20, 9.5, 9.5, G, ol) + E(73, 20, 9.5, 9.5, G, ol) + E(27, 20, 5, 5, IN, ' fill-opacity=".6"') + E(73, 20, 5, 5, IN, ' fill-opacity=".6"');
+      front = E(50, 45, 11, 8.5, '#fff', ' fill-opacity=".6"') + belly;
+      face = eyes(40, 60, 35) + E(50, 42, 3.8, 2.7, DK) + line('M46.5 47q3.5 3.2 7 0') + blush;
+    } else if (k === 1) { // うさぎ
+      back = '<g transform="rotate(-8 38 6)">' + E(38, 4, 7.5, 18, G, ol) + E(38, 5, 3.8, 12, IN, ' fill-opacity=".6"') + '</g>' +
+        '<g transform="rotate(8 62 6)">' + E(62, 4, 7.5, 18, G, ol) + E(62, 5, 3.8, 12, IN, ' fill-opacity=".6"') + '</g>';
+      front = belly;
+      face = eyes(40, 60, 36) + E(50, 41.5, 3, 2.2, '#ff7fa6') + line('M47 45q3 3 6 0M50 43.5v1.8') + blush;
+    } else if (k === 2) { // ねこ
+      back = '<path d="M66 82Q92 80 86 56" fill="none" stroke="' + c + '" stroke-opacity=".55" stroke-width="10.5" stroke-linecap="round"/>' +
+        '<path d="M66 82Q92 80 86 56" fill="none" stroke="' + P.b + '" stroke-width="8.5" stroke-linecap="round"/>' +
+        '<polygon points="25,28 27,5 45,17" fill="' + G + '"' + ol + '/><polygon points="75,28 73,5 55,17" fill="' + G + '"' + ol + '/>' +
+        '<polygon points="29.5,22 30.5,11.5 39.5,17" fill="' + IN + '" fill-opacity=".6"/><polygon points="70.5,22 69.5,11.5 60.5,17" fill="' + IN + '" fill-opacity=".6"/>';
+      front = belly;
+      face = E(40, 36, 2.6, 3.2, DK) + E(60, 36, 2.6, 3.2, DK) + E(40.9, 35, .9, .9, '#fff') + E(60.9, 35, .9, .9, '#fff') +
+        '<polygon points="48,42 52,42 50,44.6" fill="' + PK + '"/>' + line('M50 44.6q-2 3-5 2.4M50 44.6q2 3 5 2.4') +
+        '<path d="M29 41L39 42M29 46L39 45M71 41L61 42M71 46L61 45" stroke="' + DK + '" stroke-opacity=".45" stroke-width="1" stroke-linecap="round"/>' + blush;
+    } else if (k === 3) { // いぬ
+      back = '<g transform="rotate(30 80 74)">' + E(80, 72, 5, 9, G, ol) + '</g>';
+      mid = '<g transform="rotate(14 22 40)">' + E(22, 40, 8.5, 16, D, ol) + '</g><g transform="rotate(-14 78 40)">' + E(78, 40, 8.5, 16, D, ol) + '</g>';
+      front = E(50, 46, 12, 9, '#fff', ' fill-opacity=".65"') + E(37, 34, 7.5, 7, c, ' fill-opacity=".35"') + belly;
+      face = eyes(40, 60, 35) + E(50, 42.5, 4.2, 3, DK) + E(50, 52, 3, 3.6, PK) + line('M50 45.5v2.5M45.5 48q4.5 3.5 9 0') + blush;
+    } else if (k === 4) { // ひよこ
+      FG = OR;
+      back = '<path d="M44 17Q43 5 49 12Q50 2 55 12Q60 5 57 17Z" fill="' + G + '"' + ol + '/>';
+      front = belly;
+      face = eyes(40, 60, 35) + '<polygon points="46,40 54,40 50,46.5" fill="' + OR + '" stroke="#e0832a" stroke-width=".8" stroke-linejoin="round"/>' +
+        E(31, 43, 5, 3, PK, ' fill-opacity=".55"') + E(69, 43, 5, 3, PK, ' fill-opacity=".55"');
+    } else if (k === 5) { // ひつじ
+      var wool = [[30, 24, 10], [42, 15, 10.5], [58, 15, 10.5], [70, 24, 10], [24, 38, 9.5], [76, 38, 9.5], [31, 62, 9.5], [69, 62, 9.5], [32, 80, 9.5], [68, 80, 9.5]];
+      wool.forEach(function (w) { back += E(w[0], w[1], w[2], w[2], G, ol); });
+      mid = '<g transform="rotate(-25 25 41)">' + E(25, 41, 7, 4, P.a, ol) + '</g><g transform="rotate(25 75 41)">' + E(75, 41, 7, 4, P.a, ol) + '</g>';
+      front = E(50, 43, 18, 17, '#fff', ' fill-opacity=".75"');
+      face = eyes(42, 58, 38) + E(50, 45, 3, 2.2, DK) + line('M47 49q3 2.6 6 0') + E(36, 46, 4, 2.4, PK, ' fill-opacity=".5"') + E(64, 46, 4, 2.4, PK, ' fill-opacity=".5"');
+    } else if (k === 6) { // ぺんぎん
+      FG = OR;
+      arms = '<g transform="rotate(20 26 66)">' + E(26, 66, 7, 13, D, ol) + '</g><g transform="rotate(-20 74 66)">' + E(74, 66, 7, 13, D, ol) + '</g>';
+      front = E(50, 72, 15.5, 17.5, '#fff', ' fill-opacity=".92"') + E(50, 44, 19, 14.5, '#fff', ' fill-opacity=".92"');
+      face = eyes(41, 59, 39) + '<polygon points="46.5,42.5 53.5,42.5 50,47.5" fill="' + OR + '" stroke="#e0832a" stroke-width=".8" stroke-linejoin="round"/>' +
+        E(34, 45, 4, 2.4, PK, ' fill-opacity=".5"') + E(66, 45, 4, 2.4, PK, ' fill-opacity=".5"');
+    } else { // ぞう
+      back = E(21, 36, 13, 14.5, G, ol) + E(79, 36, 13, 14.5, G, ol) + E(21, 37, 8, 9.5, IN, ' fill-opacity=".55"') + E(79, 37, 8, 9.5, IN, ' fill-opacity=".55"');
+      front = belly + E(50, 55, 6.5, 12, G, ol) + '<path d="M45 52h10M45.5 57h9" stroke="' + c + '" stroke-opacity=".45" stroke-width="1" stroke-linecap="round"/>';
+      face = eyes(40, 60, 34) + E(31, 44, 4.5, 2.6, PK, ' fill-opacity=".5"') + E(69, 44, 4.5, 2.6, PK, ' fill-opacity=".5"');
+    }
+
+    var feet = E(38, 91, 9, 6, FG, ol) + E(62, 91, 9, 6, FG, ol);
+    var stitch = '<ellipse cx="50" cy="38" rx="23.5" ry="21" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1" stroke-dasharray="2.2 2.6"/>' +
+      '<ellipse cx="50" cy="70" rx="18.5" ry="18.5" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1" stroke-dasharray="2.2 2.6"/>';
+    var r = P.r;
+    var ribbon = '<path d="M50 63L35 55Q31 63 35 71Z" fill="' + r + '" stroke="#fff" stroke-opacity=".6" stroke-width="1" stroke-linejoin="round"/>' +
+      '<path d="M50 63L65 55Q69 63 65 71Z" fill="' + r + '" stroke="#fff" stroke-opacity=".6" stroke-width="1" stroke-linejoin="round"/>' +
+      E(50, 63, 3.8, 3.8, r, ' stroke="#fff" stroke-opacity=".6" stroke-width="1"') + E(48.8, 61.8, 1.1, 1.1, '#fff', ' fill-opacity=".8"');
+
+    if (stage >= 2) s += back + feet;
+    s += body + head;
+    if (stage >= 2) s += stitch + arms + mid + front;
+    if (stage >= 3) s += face;
+    if (stage >= 4) s += ribbon + '<path d="M90 6l1.8 5.2 5.2 1.8-5.2 1.8L90 20l-1.8-5.2-5.2-1.8 5.2-1.8z" fill="#ffd166"/>';
+    return s + '</svg>';
+  }
+
+  var TW = [
+    { l: 8, t: 20, s: 18, d: 2.4 }, { l: 84, t: 14, s: 14, d: 3.1 }, { l: 90, t: 55, s: 20, d: 2.7 },
+    { l: 4, t: 60, s: 12, d: 3.4 }, { l: 70, t: 4, s: 10, d: 2.2 }, { l: 20, t: 6, s: 12, d: 3.0 },
+    { l: 50, t: 0, s: 14, d: 2.6 }, { l: 92, t: 30, s: 10, d: 2.9 }, { l: 0, t: 40, s: 14, d: 2.3 }, { l: 76, t: 78, s: 12, d: 3.2 }
+  ];
+  function sparkles(stage) {
+    var n = Math.min(10, 3 + stage * 2), s = '';
+    for (var i = 0; i < n; i++) {
+      var p = TW[i];
+      s += '<svg class="tw c' + (i % 4) + '" viewBox="0 0 24 24" aria-hidden="true" style="left:' + p.l + '%;top:' + p.t + '%;width:' + p.s + 'px;height:' + p.s +
+        'px;animation-duration:' + p.d + 's;animation-delay:' + (i * 0.35).toFixed(2) + 's"><path d="' + SPARK + '" fill="currentColor"/></svg>';
+    }
+    return s;
+  }
+
+  /* ---------- backdrop: colorful stars and white glints, drawn here ---------- */
+  function buildBackdrop() {
+    var seed = 11;
+    function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    var cols = ['#3fc9b0', '#ff5fa2', '#9a6bff', '#ffc23d', '#5b8cff', '#ff7d6b', '#6fd36a', '#ff8bd0'];
+    var W = 520, i, j, s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + W + '" viewBox="0 0 ' + W + ' ' + W + '">';
+    for (i = 0; i < 20; i++) {
+      var r = 9 + rnd() * 17, x = r + 6 + rnd() * (W - 2 * r - 12), y = r + 6 + rnd() * (W - 2 * r - 12);
+      var rot = Math.round(rnd() * 72), col = cols[i % cols.length], pts = [], filled = rnd() < 0.55;
+      for (j = 0; j < 10; j++) {
+        var rr = j % 2 ? r * 0.5 : r, a = -Math.PI / 2 + j * Math.PI / 5;
+        pts.push((x + rr * Math.cos(a)).toFixed(1) + ',' + (y + rr * Math.sin(a)).toFixed(1));
+      }
+      s += '<polygon points="' + pts.join(' ') + '" transform="rotate(' + rot + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ')" fill="' + (filled ? col : 'none') +
+        '" fill-opacity=".85" stroke="' + col + '" stroke-width="2.5" stroke-linejoin="round"/>';
+    }
+    s += '</svg>';
+    var GW = 760, g = '<svg xmlns="http://www.w3.org/2000/svg" width="' + GW + '" height="' + GW + '" viewBox="0 0 ' + GW + ' ' + GW + '">';
+    for (i = 0; i < 6; i++) {
+      var br = 14 + rnd() * 10;
+      g += '<circle cx="' + (br + rnd() * (GW - 2 * br)).toFixed(1) + '" cy="' + (br + rnd() * (GW - 2 * br)).toFixed(1) + '" r="' + br.toFixed(1) + '" fill="#fff" fill-opacity=".2"/>';
+    }
+    for (i = 0; i < 24; i++) {
+      var L = 12 + rnd() * 30, gx = (L + 6 + rnd() * (GW - 2 * L - 12)).toFixed(1), gy = (L + 6 + rnd() * (GW - 2 * L - 12)).toFixed(1);
+      if (i < 15) {
+        g += '<circle cx="' + gx + '" cy="' + gy + '" r="' + (L * 0.45).toFixed(1) + '" fill="#fff" fill-opacity=".28"/>' +
+          '<ellipse cx="' + gx + '" cy="' + gy + '" rx="' + L.toFixed(1) + '" ry="1.3" fill="#fff" fill-opacity=".9"/>' +
+          '<ellipse cx="' + gx + '" cy="' + gy + '" rx="1.3" ry="' + L.toFixed(1) + '" fill="#fff" fill-opacity=".9"/>' +
+          '<circle cx="' + gx + '" cy="' + gy + '" r="3.2" fill="#fff"/>';
+      } else {
+        var dr = 2 + rnd() * 3;
+        g += '<circle cx="' + gx + '" cy="' + gy + '" r="' + (dr * 3).toFixed(1) + '" fill="#fff" fill-opacity=".25"/><circle cx="' + gx + '" cy="' + gy + '" r="' + dr.toFixed(1) + '" fill="#fff" fill-opacity=".8"/>';
+      }
+    }
+    g += '</svg>';
+    try {
+      var st = document.documentElement.style;
+      st.setProperty('--stars', 'url("data:image/svg+xml,' + encodeURIComponent(s) + '")');
+      st.setProperty('--glints', 'url("data:image/svg+xml,' + encodeURIComponent(g) + '")');
+    } catch (e) { /* plain gradient background is fine */ }
+  }
+
+  /* ---------- data ---------- */
+  function validSession(s) { return s && isFinite(s.at) && isFinite(s.m) && s.m > 0; }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o && Array.isArray(o.sessions)) {
+          var r = o.running;
+          if (!(r && isFinite(r.start) && isFinite(r.end) && isFinite(r.m))) r = null;
+          return { sessions: o.sessions.filter(validSession), running: r, pick: [5, 10, 15, 25].indexOf(o.pick) >= 0 ? o.pick : 10 };
+        }
+      }
+    } catch (e) { /* storage unavailable: start fresh */ }
+    return { sessions: [], running: null, pick: 10 };
+  }
+  var state = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+
+  var demo = false;
+  var DEMO = (function () {
+    var offs = [[0, 10], [0, 10], [1, 15], [2, 5], [2, 10], [3, 10], [4, 20], [6, 10], [7, 15], [8, 10], [9, 15], [10, 8]];
+    var arr = offs.map(function (o, i) {
+      var d = new Date();
+      d.setDate(d.getDate() - o[0]);
+      d.setHours(7, i, 0, 0);
+      return { at: d.getTime(), m: o[1] };
+    });
+    return { sessions: arr, running: null, pick: 10 };
+  })();
+  function V() { return demo ? DEMO : state; }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function dayKey(ts) { var d = new Date(ts); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function total(sess) { return sess.reduce(function (a, s) { return a + s.m; }, 0); }
+  function doneList(sess) {
+    var sorted = sess.slice().sort(function (a, b) { return a.at - b.at; }), cum = 0, out = [];
+    sorted.forEach(function (s) {
+      var before = Math.floor(cum / PLUSH_MIN);
+      cum += s.m;
+      var after = Math.floor(cum / PLUSH_MIN);
+      for (var i = before; i < after; i++) out.push({ i: i, at: s.at });
+    });
+    return out;
+  }
+  function streakOf(sess) {
+    var days = {};
+    sess.forEach(function (s) { days[dayKey(s.at)] = true; });
+    var d = new Date();
+    d.setHours(12, 0, 0, 0);
+    if (!days[dayKey(d)]) d.setDate(d.getDate() - 1);
+    var n = 0;
+    while (days[dayKey(d)]) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function minutesByDay(sess) {
+    var m = {};
+    sess.forEach(function (s) { var k = dayKey(s.at); m[k] = (m[k] || 0) + s.m; });
+    return m;
+  }
+
+  /* ---------- rendering ---------- */
+  function $(id) { return document.getElementById(id); }
+
+  function renderBanner() {
+    $('banner').innerHTML = demo
+      ? '<div class="banner"><span>見本を表示中です。ここでの動きは保存されません。</span><button type="button" class="linkbtn" data-act="demo-off">もどる</button></div>'
+      : '';
+  }
+  function renderHeader() {
+    var n = streakOf(V().sessions);
+    $('streak').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="' + SPARK + '"/></svg><span>' +
+      (n ? n + '日 つづいてるよ' : 'きょうから はじめよう') + '</span>';
+  }
+  function stageOf(prog) { return Math.min(4, Math.floor(prog / (PLUSH_MIN / 5))); }
+  function renderHero() {
+    var tot = total(V().sessions), done = Math.floor(tot / PLUSH_MIN), prog = tot % PLUSH_MIN, stage = stageOf(prog);
+    var pct = Math.round(prog / PLUSH_MIN * 100), rem = PLUSH_MIN - prog;
+    $('hero').innerHTML =
+      '<div class="stage-art">' + sparkles(stage) + plushSVG(kindIdx(done), colIdx(done), stage, true) + '</div>' +
+      '<p class="eyebrow">いま つくっている子</p>' +
+      '<h2 class="stone">' + nameOf(done) + '</h2>' +
+      '<span class="pill">' + STAGES[stage] + '</span>' +
+      '<div class="meter" role="img" aria-label="かんせいまで ' + pct + '%"><i style="width:' + pct + '%"></i></div>' +
+      '<p class="remain">あと <strong>' + rem + '分</strong> で かんせい</p>';
+  }
+  function chips(list, act, cur, prefix, disabled) {
+    return list.map(function (m) {
+      return '<button type="button" class="chip" data-act="' + act + '" data-m="' + m + '"' +
+        (cur === m ? ' aria-pressed="true"' : (act === 'pick' ? ' aria-pressed="false"' : '')) + (disabled ? ' disabled' : '') + '>' + (prefix || '') + m + '分</button>';
+    }).join('');
+  }
+  function fmt(ms) {
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    return pad(Math.floor(s / 60)) + ':' + pad(s % 60);
+  }
+  var RING_C = 2 * Math.PI * 86;
+  function renderTimer() {
+    var v = V(), todayMin = minutesByDay(v.sessions)[dayKey(Date.now())] || 0, r = demo ? null : state.running, dis = demo;
+    var html;
+    if (r) {
+      var left = Math.max(0, r.end - Date.now()), frac = 1 - left / (r.end - r.start);
+      html = '<div class="card-head"><h2>集中タイム</h2><span class="today">' + r.m + '分コース</span></div>' +
+        '<div class="ring"><svg viewBox="0 0 200 200" aria-hidden="true"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0" style="stop-color:var(--pink)"/><stop offset=".5" style="stop-color:var(--lav)"/><stop offset="1" style="stop-color:var(--aqua)"/></linearGradient></defs>' +
+        '<circle class="ring-track" cx="100" cy="100" r="86" fill="none" stroke-width="14"/>' +
+        '<circle id="ringArc" cx="100" cy="100" r="86" fill="none" stroke="url(#rg)" stroke-width="14" stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="' + RING_C.toFixed(1) + '" stroke-dashoffset="' + (RING_C * (1 - frac)).toFixed(1) + '"/></svg>' +
+        '<div class="ring-time" id="ringTime" role="timer" aria-label="のこり時間">' + fmt(left) + '</div></div>' +
+        '<p class="hint">1分たつと、そこまでの分が ぬいぐるみに入るよ。</p>' +
+        '<button type="button" class="ghost" data-act="stop">ここまでにする</button>';
+    } else {
+      html = '<div class="card-head"><h2>きょうの勉強タイム</h2><span class="today">きょう ' + todayMin + '分</span></div>' +
+        '<p class="sub">長さをえらんで、はじめるだけ。</p>' +
+        '<div class="chips" role="group" aria-label="勉強する長さ">' + chips([5, 10, 15, 25], 'pick', v.pick, '', dis) + '</div>' +
+        '<button type="button" class="go" data-act="start"' + (dis ? ' disabled' : '') + '>' + v.pick + '分、はじめる</button>' +
+        '<p class="hint">5分だけでも、ちゃんと ぬいぐるみは できていくよ。</p>' +
+        '<details class="manual"><summary>タイマーなしで記録する</summary>' +
+        '<div class="chips">' + chips([5, 10, 20, 30], 'add', 0, '+', dis) + '</div></details>';
+    }
+    $('timer').innerHTML = html;
+  }
+  function renderWeek() {
+    var v = V(), mins = minutesByDay(v.sessions), now = new Date(), dow = (now.getDay() + 6) % 7, todayKey = dayKey(now.getTime());
+    var cells = '';
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(now);
+      d.setHours(12, 0, 0, 0);
+      d.setDate(d.getDate() - dow + i);
+      var k = dayKey(d.getTime()), m = mins[k] || 0, isToday = k === todayKey;
+      cells += '<div class="day' + (isToday ? ' is-today' : '') + '"><span>' + DAYS[i] + '</span>' +
+        '<span class="dot' + (m ? ' on' : '') + (isToday ? ' today' : '') + '">' + (m ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="' + SPARK + '"/></svg>' : '') + '</span>' +
+        '<small>' + (m ? m + '分' : '') + '</small></div>';
+    }
+    $('week').innerHTML = '<div class="card-head"><h2>こんしゅうの きらめき</h2></div><div class="week">' + cells + '</div>' +
+      '<p class="hint">おやすみの日があっても、ぬいぐるみは待っててくれるよ。</p>';
+  }
+  function renderBox() {
+    var v = V(), tot = total(v.sessions), n = Math.floor(tot / PLUSH_MIN), list = doneList(v.sessions);
+    var slots = Math.max(12, Math.ceil((n + 1) / 4) * 4), cells = '';
+    for (var i = 0; i < slots; i++) {
+      if (i < n) {
+        var d = new Date(list[i] ? list[i].at : Date.now());
+        cells += '<figure class="slot"><div class="slot-art">' + plushSVG(kindIdx(i), colIdx(i), 4, false) + '</div><figcaption class="cap">' +
+          KINDS[kindIdx(i)] + '<small>' + COLORS[colIdx(i)].n + '</small><small>' + (d.getMonth() + 1) + '/' + d.getDate() + '</small></figcaption></figure>';
+      } else {
+        cells += '<figure class="slot empty"><div class="slot-art">' + plushSVG(kindIdx(i), colIdx(i), 4, false) + '</div></figure>';
+      }
+    }
+    $('box').innerHTML = '<div class="card-head"><h2>ぬいぐるみコレクション</h2><span class="today">' + n + 'こ ・ ぜんぶで ' + tot + '分</span></div>' +
+      (n === 0 ? '<p class="sub">' + PLUSH_MIN + '分ぶん勉強すると、さいしょの子がかんせい。</p>' : '') +
+      '<div class="gems">' + cells + '</div>';
+  }
+  function renderFoot() {
+    $('foot').innerHTML = '<p>記録は、この端末のブラウザに保存されるよ。</p>' +
+      (demo ? '' : '<button type="button" class="linkbtn" data-act="demo-on">見本の画面をのぞいてみる</button>');
+  }
+  function renderAll() {
+    renderBanner(); renderHeader(); renderHero(); renderTimer(); renderWeek(); renderBox(); renderFoot();
+  }
+
+  /* ---------- actions ---------- */
+  var ov = $('overlay');
+  function burst() {
+    var cols = ['var(--pink)', 'var(--lav)', 'var(--aqua)', 'var(--gold)'], s = '';
+    for (var i = 0; i < 16; i++) {
+      var a = (i / 16) * Math.PI * 2 + Math.random() * 0.3, r = 90 + Math.random() * 80;
+      s += '<span style="--dx:' + Math.round(Math.cos(a) * r) + 'px;--dy:' + Math.round(Math.sin(a) * r) + 'px;--c:' + cols[i % 4] + ';--dl:' + (Math.random() * 0.3).toFixed(2) + 's"></span>';
+    }
+    return '<div class="burst" aria-hidden="true">' + s + '</div>';
+  }
+  function celebrate(m, before, after) {
+    var db = Math.floor(before / PLUSH_MIN), da = Math.floor(after / PLUSH_MIN), html;
+    if (da > db) {
+      var i = da - 1;
+      html = burst() + '<p class="eyebrow">ぬいぐるみが かんせい</p><h2>' + nameOf(i) + 'が できたよ！</h2>' +
+        '<div class="gem-big">' + plushSVG(kindIdx(i), colIdx(i), 4, false) + '</div>' +
+        '<p>コレクションに ' + da + 'こ目が はいったよ。</p>' +
+        '<button type="button" class="go" data-act="close" data-go="box">コレクションを見る</button>';
+    } else {
+      var prog = after % PLUSH_MIN, stage = stageOf(prog);
+      html = burst() + '<p class="eyebrow">+' + m + '分</p><h2>' + DONE_MSG[Math.floor(Math.random() * DONE_MSG.length)] + '</h2>' +
+        '<div class="gem-big">' + plushSVG(kindIdx(da), colIdx(da), stage, false) + '</div>' +
+        '<p>あと ' + (PLUSH_MIN - prog) + '分で かんせいだよ。</p>' +
+        '<button type="button" class="go" data-act="close">やったね</button>';
+    }
+    ov.innerHTML = '<div class="pop" role="dialog" aria-modal="true" aria-label="おめでとう">' + html + '</div>';
+    ov.hidden = false;
+    var b = ov.querySelector('button');
+    if (b) b.focus();
+  }
+  function closeOverlay(goBox) {
+    ov.hidden = true;
+    ov.innerHTML = '';
+    if (goBox) {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      $('box').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+  function addSession(m) {
+    var before = total(state.sessions);
+    state.sessions.push({ at: Date.now(), m: m });
+    save();
+    renderAll();
+    celebrate(m, before, before + m);
+  }
+  function finish(early) {
+    var r = state.running;
+    if (!r) return;
+    var m = early ? Math.min(r.m, Math.floor((Date.now() - r.start) / 60000)) : r.m;
+    state.running = null;
+    if (m > 0) { addSession(m); } else { save(); renderAll(); }
+  }
+  function tick() {
+    if (demo || !state.running) return;
+    var r = state.running, now = Date.now();
+    if (now >= r.end) { finish(false); return; }
+    var arc = $('ringArc'), t = $('ringTime');
+    if (arc && t) {
+      arc.setAttribute('stroke-dashoffset', (RING_C * (r.end - now) / (r.end - r.start)).toFixed(1));
+      t.textContent = fmt(r.end - now);
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target === ov) { closeOverlay(false); return; }
+    var b = e.target.closest ? e.target.closest('[data-act]') : null;
+    if (!b || b.disabled) return;
+    var act = b.getAttribute('data-act'), m = +b.getAttribute('data-m');
+    if (act === 'pick') { state.pick = m; save(); renderTimer(); }
+    else if (act === 'start') {
+      if (demo) return;
+      var now = Date.now();
+      state.running = { start: now, end: now + state.pick * 60000, m: state.pick };
+      save(); renderTimer();
+    }
+    else if (act === 'stop') { finish(true); }
+    else if (act === 'add') { if (!demo) addSession(m); }
+    else if (act === 'close') { closeOverlay(b.getAttribute('data-go') === 'box'); }
+    else if (act === 'demo-on') { demo = true; renderAll(); window.scrollTo(0, 0); }
+    else if (act === 'demo-off') { demo = false; renderAll(); window.scrollTo(0, 0); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeOverlay(false); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+
+  buildBackdrop();
+  renderAll();
+  setInterval(tick, 500);
+  tick();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "きらきらぬいぐるみ工房",
+  "short_name": "ぬいぐるみ工房",
+  "description": "勉強した分だけ、ぬいぐるみが縫い上がっていくアプリ",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7cfee",
+  "theme_color": "#f7cfee",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
